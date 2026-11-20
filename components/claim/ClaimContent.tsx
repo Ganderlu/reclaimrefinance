@@ -55,7 +55,7 @@ function ClaimContent() {
                 What Happens Next?
               </h2>
               <p className="mt-3 text-slate-text">
-                After you submit your claim, you'll receive a confirmation
+                After you submit your claim, you&apos;ll receive a confirmation
                 email and your case will be reviewed by our team.
               </p>
               <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

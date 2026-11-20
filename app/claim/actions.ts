@@ -112,6 +112,26 @@ export async function submitClaim(data: ClaimData): Promise<SubmitResult> {
       updatedAt: createdAt,
     });
 
+    // Surface the new claim in the administrator dashboard.
+    await Promise.allSettled([
+      adminDb.collection("notifications").add({
+        title: "New claim submitted",
+        message: `${data.personal.firstName} ${data.personal.lastName} submitted ${referenceNumber} (${categoryLabel}).`,
+        type: "claim",
+        read: false,
+        link: "/admin/claims",
+        createdAt,
+      }),
+      adminDb.collection("auditLogs").add({
+        actorId: "system",
+        actorEmail: data.personal.email,
+        action: "Submitted a new claim",
+        target: referenceNumber,
+        targetType: "claim",
+        createdAt,
+      }),
+    ]);
+
     // Send confirmation email via Resend if configured
     await sendConfirmationEmails({
       email: data.personal.email,

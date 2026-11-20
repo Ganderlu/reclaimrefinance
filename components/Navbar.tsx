@@ -70,8 +70,13 @@ export default function Navbar({ darkHero = false }: { darkHero?: boolean }) {
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileOpen(false);
+    };
+    if (mobileOpen) window.addEventListener("keydown", onKeyDown);
     return () => {
       document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKeyDown);
     };
   }, [mobileOpen]);
 
@@ -86,118 +91,127 @@ export default function Navbar({ darkHero = false }: { darkHero?: boolean }) {
   };
 
   return (
-    <header
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-white/90 backdrop-blur-xl shadow-[0_8px_30px_-12px_rgba(7,29,58,0.18)]"
-          : "bg-transparent"
-      }`}
-    >
-      <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-[88px] items-center justify-between">
-          <Logo light={onDark} />
+    <>
+      <header
+        className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
+          scrolled
+            ? "bg-white/90 backdrop-blur-xl shadow-[0_8px_30px_-12px_rgba(7,29,58,0.18)]"
+            : "bg-transparent"
+        }`}
+      >
+        <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-[88px] items-center justify-between">
+            <Logo light={onDark} />
 
-          {/* Desktop nav */}
-          <ul className="hidden lg:flex items-center gap-1">
-            {navLinks.map((link) => (
-              <li
-                key={link.label}
-                className="relative"
-                onMouseEnter={() => link.dropdown && setOpenDropdown(link.label)}
-                onMouseLeave={() => setOpenDropdown(null)}
-              >
-                <Link
-                  href={link.href}
-                  aria-current={isActive(link) ? "page" : undefined}
-                  className={`relative flex items-center gap-1 rounded-lg px-3.5 py-2 text-sm font-semibold transition-colors ${
-                    isActive(link)
-                      ? onDark
-                        ? "text-emerald-light"
-                        : "text-emerald"
-                      : onDark
-                        ? "text-white hover:text-emerald-light"
-                        : scrolled
-                          ? "text-slate-heading hover:text-emerald"
-                          : "text-navy hover:text-emerald"
-                  }`}
+            {/* Desktop nav */}
+            <ul className="hidden lg:flex items-center gap-1">
+              {navLinks.map((link) => (
+                <li
+                  key={link.label}
+                  className="relative"
+                  onMouseEnter={() => link.dropdown && setOpenDropdown(link.label)}
+                  onMouseLeave={() => setOpenDropdown(null)}
                 >
-                  {link.label}
-                  {link.dropdown && (
-                    <ChevronDown
-                      size={15}
-                      className={`transition-transform duration-200 ${
-                        openDropdown === link.label ? "rotate-180" : ""
+                  <Link
+                    href={link.href}
+                    aria-current={isActive(link) ? "page" : undefined}
+                    className={`relative flex items-center gap-1 rounded-lg px-3.5 py-2 text-sm font-semibold transition-colors ${
+                      isActive(link)
+                        ? onDark
+                          ? "text-emerald-light"
+                          : "text-emerald"
+                        : onDark
+                          ? "text-white hover:text-emerald-light"
+                          : scrolled
+                            ? "text-slate-heading hover:text-emerald"
+                            : "text-navy hover:text-emerald"
+                    }`}
+                  >
+                    {link.label}
+                    {link.dropdown && (
+                      <ChevronDown
+                        size={15}
+                        className={`transition-transform duration-200 ${
+                          openDropdown === link.label ? "rotate-180" : ""
+                        }`}
+                      />
+                    )}
+                    <span
+                      aria-hidden="true"
+                      className={`pointer-events-none absolute inset-x-2.5 bottom-0.5 h-0.5 origin-left rounded-full bg-emerald transition-transform duration-300 ${
+                        isActive(link) ? "scale-x-100" : "scale-x-0"
                       }`}
                     />
+                  </Link>
+
+                  {link.dropdown && (
+                    <AnimatePresence>
+                      {openDropdown === link.label && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 10 }}
+                          transition={{ duration: 0.18, ease: "easeOut" }}
+                          className="absolute left-0 top-full pt-3 w-[300px]"
+                        >
+                          <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white p-2 shadow-[0_20px_50px_-15px_rgba(7,29,58,0.25)]">
+                            {link.dropdown.map((item) => (
+                              <Link
+                                key={item.href}
+                                href={item.href}
+                                className="block rounded-xl px-3 py-2.5 text-sm font-medium text-slate-text transition hover:bg-sky-soft hover:text-emerald"
+                              >
+                                {item.label}
+                              </Link>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   )}
-                  <span
-                    aria-hidden="true"
-                    className={`pointer-events-none absolute inset-x-2.5 bottom-0.5 h-0.5 origin-left rounded-full bg-emerald transition-transform duration-300 ${
-                      isActive(link) ? "scale-x-100" : "scale-x-0"
-                    }`}
-                  />
-                </Link>
+                </li>
+              ))}
+            </ul>
 
-                {link.dropdown && (
-                  <AnimatePresence>
-                    {openDropdown === link.label && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 10 }}
-                        transition={{ duration: 0.18, ease: "easeOut" }}
-                        className="absolute left-0 top-full pt-3 w-[300px]"
-                      >
-                        <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white p-2 shadow-[0_20px_50px_-15px_rgba(7,29,58,0.25)]">
-                          {link.dropdown.map((item) => (
-                            <Link
-                              key={item.href}
-                              href={item.href}
-                              className="block rounded-xl px-3 py-2.5 text-sm font-medium text-slate-text transition hover:bg-sky-soft hover:text-emerald"
-                            >
-                              {item.label}
-                            </Link>
-                          ))}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                )}
-              </li>
-            ))}
-          </ul>
+            {/* Actions */}
+            <div className="hidden lg:flex items-center gap-3">
+              <Link
+                href="/claim"
+                className="group inline-flex items-center gap-1.5 rounded-full bg-emerald px-5 py-2.5 text-sm font-semibold text-white shadow-emerald transition hover:bg-emerald-soft"
+              >
+                Start a Claim
+                <ArrowRight
+                  size={16}
+                  className="transition-transform group-hover:translate-x-0.5"
+                />
+              </Link>
+            </div>
 
-          {/* Actions */}
-          <div className="hidden lg:flex items-center gap-3">
-            <Link
-              href="/claim"
-              className="group inline-flex items-center gap-1.5 rounded-full bg-emerald px-5 py-2.5 text-sm font-semibold text-white shadow-emerald transition hover:bg-emerald-soft"
+            {/* Mobile toggle */}
+            <button
+              type="button"
+              onClick={() => setMobileOpen(true)}
+              className={`lg:hidden inline-flex h-11 w-11 items-center justify-center rounded-xl border ${
+                onDark
+                  ? "border-white/20 bg-white/10 text-white"
+                  : "border-slate-200 bg-white text-navy"
+              }`}
+              aria-label="Open menu"
+              aria-expanded={mobileOpen}
             >
-              Start a Claim
-              <ArrowRight
-                size={16}
-                className="transition-transform group-hover:translate-x-0.5"
-              />
-            </Link>
+              <Menu size={22} />
+            </button>
           </div>
+        </nav>
+      </header>
 
-          {/* Mobile toggle */}
-          <button
-            type="button"
-            onClick={() => setMobileOpen(true)}
-            className={`lg:hidden inline-flex h-11 w-11 items-center justify-center rounded-xl border ${
-              onDark
-                ? "border-white/20 bg-white/10 text-white"
-                : "border-slate-200 bg-white text-navy"
-            }`}
-            aria-label="Open menu"
-          >
-            <Menu size={22} />
-          </button>
-        </div>
-      </nav>
-
-      {/* Mobile drawer */}
+      {/*
+       * Mobile drawer. Rendered as a sibling of <header> (not inside it) so its
+       * `fixed` positioning resolves against the viewport. Inside the header it
+       * would be clipped to the bar once the header applies `backdrop-blur-xl`
+       * on scroll, because backdrop-filter creates a containing block for fixed
+       * descendants.
+       */}
       <AnimatePresence>
         {mobileOpen && (
           <>
@@ -206,7 +220,7 @@ export default function Navbar({ darkHero = false }: { darkHero?: boolean }) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 z-50 bg-navy/50 backdrop-blur-sm lg:hidden"
+              className="fixed inset-0 z-[70] bg-navy/50 backdrop-blur-sm lg:hidden"
               onClick={() => setMobileOpen(false)}
             />
             <motion.aside
@@ -214,7 +228,10 @@ export default function Navbar({ darkHero = false }: { darkHero?: boolean }) {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "tween", duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-              className="fixed top-0 right-0 z-50 flex h-full w-[86%] max-w-sm flex-col bg-white shadow-2xl lg:hidden"
+              className="fixed inset-y-0 right-0 z-[70] flex w-[86%] max-w-sm flex-col bg-white shadow-2xl lg:hidden"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Site menu"
             >
               <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
                 <Logo />
@@ -227,7 +244,7 @@ export default function Navbar({ darkHero = false }: { darkHero?: boolean }) {
                   <X size={20} />
                 </button>
               </div>
-              <div className="flex-1 overflow-y-auto px-5 py-5">
+              <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-5">
                 <ul className="flex flex-col gap-1">
                   {navLinks.map((link) => (
                     <MobileNavItem
@@ -251,7 +268,7 @@ export default function Navbar({ darkHero = false }: { darkHero?: boolean }) {
           </>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 }
 

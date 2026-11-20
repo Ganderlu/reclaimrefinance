@@ -11,6 +11,9 @@
   --color-sky-soft: #f3f7fc;
   --color-slate-text: #4a5a6e;
   --color-slate-heading: #14233a;
+  --color-line: #dce6f2;
+  --color-ink: #10213d;
+  --color-muted: #64748b;
 
   --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", Roboto,
     sans-serif;
