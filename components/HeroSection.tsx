@@ -5,8 +5,7 @@ import Image from "next/image";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { ArrowRight, ShieldCheck } from "lucide-react";
 
-const heroImg =
-  "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=1100&q=80";
+const heroImg = "/images/how-it-works/hero.jpg";
 
 const decorativeLines = [
   "M0,90 C150,150 260,40 440,100",

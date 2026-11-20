@@ -1,7 +1,17 @@
 "use server";
 
 import { adminDb, adminConfigured } from "@/lib/firebase-admin";
+import { createUploadSignature } from "@/lib/cloudinary";
 import type { ClaimData, ScamCategory } from "@/lib/claim-types";
+
+/**
+ * Returns a short-lived signature so the browser can upload a supporting
+ * document directly to Cloudinary. Returns null when Cloudinary is not
+ * configured, letting the client fall back gracefully.
+ */
+export async function signCloudinaryUpload(draftId: string) {
+  return createUploadSignature(draftId);
+}
 
 const categoryLabels: Record<string, string> = {
   crypto: "Cryptocurrency Fraud",
@@ -43,70 +53,78 @@ export async function submitClaim(data: ClaimData): Promise<SubmitResult> {
   const createdAt = new Date().toISOString();
   const categoryLabel = categoryLabels[data.scam.category as ScamCategory] || data.scam.category;
 
-  if (adminConfigured && adminDb) {
-    try {
-      // Atomic counter for safe sequential reference numbers
-      const counterRef = adminDb.collection("counters").doc("claims");
-      await adminDb.runTransaction(async (tx) => {
-        const snap = await tx.get(counterRef);
-        const next = (snap.data()?.count ?? 0) + 1;
-        tx.set(counterRef, { count: next }, { merge: true });
-        referenceNumber = `RR-${year}-${String(next).padStart(6, "0")}`;
-      });
+  if (!adminConfigured || !adminDb) {
+    console.error("Claim submission failed: Firebase Admin is not configured.");
+    return {
+      ok: false,
+      error: "We could not save your claim right now. Please try again later.",
+    };
+  }
 
-      // Idempotency check
-      const existing = await adminDb
-        .collection("claims")
-        .where("idempotencyKey", "==", idempotencyKey)
-        .limit(1)
-        .get();
-      if (!existing.empty) {
-        const first = existing.docs[0].data();
-        return {
-          ok: true,
-          data: {
-            referenceNumber: first.referenceNumber,
-            createdAt: first.createdAt,
-            category: categoryLabel,
-          },
-        };
-      }
+  try {
+    // Atomic counter for safe sequential reference numbers
+    const counterRef = adminDb.collection("counters").doc("claims");
+    await adminDb.runTransaction(async (tx) => {
+      const snap = await tx.get(counterRef);
+      const next = (snap.data()?.count ?? 0) + 1;
+      tx.set(counterRef, { count: next }, { merge: true });
+      referenceNumber = `RR-${year}-${String(next).padStart(6, "0")}`;
+    });
 
-      await adminDb.collection("claims").add({
-        referenceNumber,
-        userId: null,
-        personalInformation: data.personal,
-        scamDetails: data.scam,
-        financialDetails: data.financial,
-        supportingDocuments: data.documents.map((d) => ({
-          name: d.name,
-          size: d.size,
-          type: d.type,
-          category: d.category,
-          storagePath: d.storagePath,
-          downloadUrl: d.downloadUrl,
-        })),
-        status: "Submitted",
-        assignedOfficer: null,
-        idempotencyKey,
-        createdAt,
-        updatedAt: createdAt,
-      });
-
-      // Send confirmation email via Resend if configured
-      await sendConfirmationEmails({
-        email: data.personal.email,
-        name: `${data.personal.firstName} ${data.personal.lastName}`,
-        referenceNumber,
-        categoryLabel,
-      });
-    } catch (err) {
-      console.error("Claim submission failed:", err);
+    // Idempotency check
+    const existing = await adminDb
+      .collection("claims")
+      .where("idempotencyKey", "==", idempotencyKey)
+      .limit(1)
+      .get();
+    if (!existing.empty) {
+      const first = existing.docs[0].data();
       return {
-        ok: false,
-        error: "We could not save your claim. Please try again later.",
+        ok: true,
+        data: {
+          referenceNumber: first.referenceNumber,
+          createdAt: first.createdAt,
+          category: categoryLabel,
+        },
       };
     }
+
+    await adminDb.collection("claims").add({
+      referenceNumber,
+      userId: null,
+      personalInformation: data.personal,
+      scamDetails: data.scam,
+      financialDetails: data.financial,
+      supportingDocuments: data.documents.map((d) => ({
+        name: d.name,
+        size: d.size,
+        type: d.type,
+        category: d.category,
+        publicId: d.publicId ?? null,
+        secureUrl: d.secureUrl ?? null,
+        resourceType: d.resourceType ?? null,
+        format: d.format ?? null,
+      })),
+      status: "Submitted",
+      assignedOfficer: null,
+      idempotencyKey,
+      createdAt,
+      updatedAt: createdAt,
+    });
+
+    // Send confirmation email via Resend if configured
+    await sendConfirmationEmails({
+      email: data.personal.email,
+      name: `${data.personal.firstName} ${data.personal.lastName}`,
+      referenceNumber,
+      categoryLabel,
+    });
+  } catch (err) {
+    console.error("Claim submission failed:", err);
+    return {
+      ok: false,
+      error: "We could not save your claim. Please try again later.",
+    };
   }
 
   return {

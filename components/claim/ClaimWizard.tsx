@@ -173,8 +173,10 @@ export default function ClaimWizard({
           category: d.category,
           status: d.status,
           progress: d.progress,
-          storagePath: d.storagePath,
-          downloadUrl: d.downloadUrl,
+          publicId: d.publicId,
+          secureUrl: d.secureUrl,
+          resourceType: d.resourceType,
+          format: d.format,
         })),
       };
       const res = await submitClaim(payload);

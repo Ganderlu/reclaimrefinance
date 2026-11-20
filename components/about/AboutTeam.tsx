@@ -16,22 +16,22 @@ const team = [
   {
     name: "Daniel Whitfield",
     role: "Head of Client Relations",
-    img: "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=Professional%20corporate%20headshot%20photograph%20of%20a%20white%20man%20aged%2048%20with%20short%20grey%20hair%20wearing%20a%20dark%20navy%20suit%20and%20tie%2C%20confident%20friendly%20expression%2C%20modern%20office%20background%20softly%20blurred%2C%20realistic%20business%20portrait&image_size=square_hd",
+    img: "/images/about/team-1.jpg",
   },
   {
     name: "Sarah Bennett",
     role: "Senior Recovery Specialist",
-    img: "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=Professional%20corporate%20headshot%20photograph%20of%20a%20white%20woman%20aged%2038%20with%20brown%20hair%20wearing%20a%20white%20blouse%20and%20dark%20blazer%2C%20confident%20warm%20smile%2C%20bright%20modern%20office%20background%20softly%20blurred%2C%20realistic%20business%20portrait&image_size=square_hd",
+    img: "/images/about/team-2.jpg",
   },
   {
     name: "Michael Reeves",
     role: "Financial Investigations Lead",
-    img: "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=Professional%20corporate%20headshot%20photograph%20of%20a%20white%20man%20aged%2036%20with%20brown%20hair%20wearing%20a%20charcoal%20suit%20and%20light%20blue%20shirt%2C%20confident%20expression%2C%20modern%20office%20background%20softly%20blurred%2C%20realistic%20business%20portrait&image_size=square_hd",
+    img: "/images/about/team-3.jpg",
   },
   {
     name: "Claire Donovan",
     role: "Client Support Manager",
-    img: "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=Professional%20corporate%20headshot%20photograph%20of%20a%20white%20woman%20aged%2052%20with%20blonde%20hair%20wearing%20a%20navy%20blazer%2C%20calm%20confident%20professional%20expression%2C%20modern%20office%20background%20softly%20blurred%2C%20realistic%20business%20portrait&image_size=square_hd",
+    img: "/images/about/team-4.jpg",
   },
 ];
 

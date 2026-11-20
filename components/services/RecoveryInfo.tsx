@@ -6,8 +6,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { AlertTriangle, ArrowRight, Building2, Clock3 } from "lucide-react";
 import Reveal from "../Reveal";
 
-const infoImg =
-  "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=Caucasian%20professional%20financial%20investigator%20in%20a%20suit%20reviewing%20case%20documents%20at%20a%20desk%20in%20a%20modern%20office%2C%20realistic%20corporate%20photography&image_size=portrait_4_3";
+const infoImg = "/images/about/hero.jpg";
 
 const points = [
   {

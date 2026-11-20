@@ -32,8 +32,7 @@ const steps = [
   },
 ];
 
-const howImg =
-  "https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=900&q=80";
+const howImg = "/images/how-it-works/why.jpg";
 
 export default function HowItWorks() {
   const reduce = useReducedMotion();

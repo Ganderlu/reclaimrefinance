@@ -10,9 +10,55 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { StepHeader } from "./fields";
-import { storage, firebaseConfigured } from "@/lib/firebase";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { signCloudinaryUpload } from "@/app/claim/actions";
 import type { UploadedFile } from "@/lib/claim-types";
+
+type CloudinarySignature = NonNullable<
+  Awaited<ReturnType<typeof signCloudinaryUpload>>
+>;
+
+interface CloudinaryUploadResult {
+  public_id: string;
+  secure_url: string;
+  resource_type: string;
+  format: string;
+}
+
+function uploadToCloudinary(
+  file: File,
+  sig: CloudinarySignature,
+  onProgress: (percent: number) => void,
+): Promise<CloudinaryUploadResult> {
+  return new Promise((resolve, reject) => {
+    const form = new FormData();
+    form.append("file", file);
+    form.append("api_key", sig.apiKey);
+    form.append("timestamp", String(sig.timestamp));
+    form.append("folder", sig.folder);
+    form.append("signature", sig.signature);
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", sig.uploadUrl, true);
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable) {
+        onProgress(Math.round((e.loaded / e.total) * 100));
+      }
+    };
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try {
+          resolve(JSON.parse(xhr.responseText) as CloudinaryUploadResult);
+        } catch {
+          reject(new Error("Invalid response from Cloudinary"));
+        }
+      } else {
+        reject(new Error(`Cloudinary upload failed (${xhr.status})`));
+      }
+    };
+    xhr.onerror = () => reject(new Error("Network error during upload"));
+    xhr.send(form);
+  });
+}
 
 const ACCEPTED = ["application/pdf", "image/jpeg", "image/png"];
 const MAX_SIZE = 10 * 1024 * 1024; // 10MB
@@ -84,46 +130,44 @@ export default function StepDocuments({
       };
       setFiles((prev) => [...prev, entry]);
 
-      const storagePath = `claims/drafts/${draftId}/${Date.now()}-${file.name}`;
+      // Ask the server to sign a direct upload to Cloudinary.
+      let signature: CloudinarySignature | null = null;
+      try {
+        signature = await signCloudinaryUpload(draftId);
+      } catch {
+        signature = null;
+      }
 
-      if (firebaseConfigured && storage) {
-        const storageRef = ref(storage, storagePath);
-        const task = uploadBytesResumable(storageRef, file);
-        task.on("state_changed", (snap) => {
-          const progress = Math.round(
-            (snap.bytesTransferred / snap.totalBytes) * 100,
-          );
-          updateFile(file.name, { progress });
-        });
+      if (signature) {
         try {
-          await task;
-          const downloadUrl = await getDownloadURL(storageRef);
+          const result = await uploadToCloudinary(file, signature, (progress) =>
+            updateFile(file.name, { progress }),
+          );
           updateFile(file.name, {
             status: "success",
             progress: 100,
-            storagePath,
-            downloadUrl,
+            publicId: result.public_id,
+            secureUrl: result.secure_url,
+            resourceType: result.resource_type,
+            format: result.format,
           });
         } catch {
           updateFile(file.name, { status: "error" });
           setUploadError(`Failed to upload ${file.name}. Please try again.`);
         }
-      } else {
-        // Simulated upload progress when Firebase is not configured
-        let progress = 0;
-        const interval = setInterval(() => {
-          progress = Math.min(100, progress + Math.random() * 25);
-          updateFile(file.name, { progress: Math.round(progress) });
-          if (progress >= 100) {
-            clearInterval(interval);
-            updateFile(file.name, {
-              status: "success",
-              progress: 100,
-              storagePath,
-            });
-          }
-        }, 180);
+        return;
       }
+
+      // Simulated upload progress when Cloudinary is not configured
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress = Math.min(100, progress + Math.random() * 25);
+        updateFile(file.name, { progress: Math.round(progress) });
+        if (progress >= 100) {
+          clearInterval(interval);
+          updateFile(file.name, { status: "success", progress: 100 });
+        }
+      }, 180);
     },
     [],
   );

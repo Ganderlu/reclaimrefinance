@@ -4,8 +4,7 @@ import Image from "next/image";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { ShieldCheck, Zap, Headphones, Lock } from "lucide-react";
 
-const heroImg =
-  "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=Professional%20corporate%20photograph%20of%20a%20Caucasian%20businesswoman%20aged%2038%20wearing%20glasses%2C%20sitting%20in%20a%20modern%20financial%20consulting%20office%20working%20on%20a%20laptop%2C%20thoughtful%20confident%20expression%2C%20soft%20natural%20daylight%2C%20premium%20financial%20services%20portrait%2C%20shield%20and%20cybersecurity%20glow%20overlay%2C%20sharp%20focus&image_size=portrait_4_3";
+const heroImg = "/images/about/hero.jpg";
 
 const features = [
   { icon: ShieldCheck, label: "Secure & Confidential" },

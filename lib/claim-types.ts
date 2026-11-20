@@ -68,8 +68,11 @@ export interface UploadedFile {
   category: string;
   status: "uploading" | "success" | "error";
   progress: number;
-  storagePath?: string;
-  downloadUrl?: string;
+  // Cloudinary reference for the stored file
+  publicId?: string;
+  secureUrl?: string;
+  resourceType?: string;
+  format?: string;
 }
 
 export interface ReviewConsent {

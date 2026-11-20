@@ -5,8 +5,7 @@ import Link from "next/link";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
 
-const heroImg =
-  "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=Professional%20corporate%20photograph%20of%20a%20confident%20white%20businesswoman%20aged%2040%20with%20shoulder-length%20hair%20wearing%20glasses%20and%20a%20tailored%20navy%20blazer%2C%20seated%20in%20a%20modern%20executive%20office%20with%20floor-to-ceiling%20windows%2C%20soft%20natural%20daylight%2C%20subtle%20smile%20conveying%20trust%20and%20expertise%2C%20premium%20financial%20services%20corporate%20portrait%2C%20sharp%20focus%2C%20shallow%20depth%20of%20field&image_size=portrait_4_3";
+const heroImg = "/images/about/hero.jpg";
 
 export default function AboutHero() {
   const reduce = useReducedMotion();

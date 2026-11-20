@@ -5,8 +5,7 @@ import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { CheckCircle2, ShieldCheck } from "lucide-react";
 import Reveal from "../Reveal";
 
-const whyImg =
-  "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=Professional%20corporate%20photograph%20of%20a%20confident%20Caucasian%20businessman%20aged%2038%20wearing%20a%20navy%20business%20suit%20reviewing%20financial%20documents%20beside%20a%20laptop%20in%20a%20modern%20office%2C%20focused%20expression%2C%20soft%20natural%20daylight%2C%20premium%20financial%20services%20photography&image_size=landscape_4_3";
+const whyImg = "/images/how-it-works/why.jpg";
 
 const features = [
   "Clear step-by-step guidance.",

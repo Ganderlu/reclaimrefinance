@@ -6,8 +6,7 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Reveal from "./Reveal";
 
-const globeImg =
-  "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80";
+const globeImg = "/images/how-it-works/cta-globe.jpg";
 
 export default function CTASection() {
   return (

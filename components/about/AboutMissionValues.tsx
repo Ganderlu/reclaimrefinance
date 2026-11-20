@@ -4,8 +4,7 @@ import Image from "next/image";
 import { Check } from "lucide-react";
 import Reveal from "../Reveal";
 
-const buildingImg =
-  "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=Professional%20architectural%20photograph%20of%20a%20modern%20glass%20corporate%20office%20tower%20exterior%20at%20blue%20hour%2C%20reflective%20facade%2C%20premium%20international%20financial%20district%2C%20clean%20minimal%20composition%2C%20realistic%20photography&image_size=portrait_4_3";
+const buildingImg = "/images/about/mission-building.jpg";
 
 const values = [
   "Integrity",

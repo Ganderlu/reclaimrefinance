@@ -6,8 +6,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Lock, ShieldCheck } from "lucide-react";
 import Reveal from "../Reveal";
 
-const bgImg =
-  "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=Global%20finance%20and%20cybersecurity%20background%2C%20dark%20navy%20world%20map%20with%20glowing%20emerald%20connection%20lines%20and%20digital%20network%20nodes%2C%20abstract%20technology%20backdrop%2C%20no%20people%2C%20premium%20corporate%20design&image_size=landscape_16_9";
+const bgImg = "/images/how-it-works/cta-globe.jpg";
 
 export default function ServicesCta() {
   const reduce = useReducedMotion();

@@ -13,8 +13,7 @@ const features = [
   "International Customer Support",
 ];
 
-const testimonialImg =
-  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=500&q=80";
+const testimonialImg = "/images/about/team-1.jpg";
 
 export default function WhyChooseUs() {
   return (

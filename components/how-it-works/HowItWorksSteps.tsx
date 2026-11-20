@@ -6,9 +6,6 @@ import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { ArrowRight, ArrowDown, CheckCircle2 } from "lucide-react";
 import Reveal from "../Reveal";
 
-const img = (prompt: string, size = "landscape_4_3") =>
-  `https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=${prompt}&image_size=${size}`;
-
 type Step = {
   num: number;
   title: string;
@@ -24,9 +21,7 @@ const steps: Step[] = [
     num: 1,
     title: "Submit Your Claim",
     desc: "Complete our secure online application with details about your financial loss and the incident.",
-    image: img(
-      "Close-up%20of%20a%20laptop%20screen%20displaying%20a%20secure%20online%20application%20form%20with%20form%20fields%2C%20clean%20modern%20UI%2C%20soft%20blue%20lighting%2C%20premium%20fintech%20photography",
-    ),
+    image: "/images/how-it-works/hero.jpg",
     button: "Get Started",
     href: "/claim",
   },
@@ -34,9 +29,7 @@ const steps: Step[] = [
     num: 2,
     title: "Initial Assessment",
     desc: "We review your submitted information and supporting evidence to understand your situation.",
-    image: img(
-      "Financial%20documents%20and%20paperwork%20being%20reviewed%20with%20a%20magnifying%20glass%20on%20a%20wooden%20desk%2C%20professional%20office%20setting%2C%20soft%20natural%20light%2C%20premium%20corporate%20photography",
-    ),
+    image: "/images/how-it-works/why.jpg",
     button: "Learn More",
     href: "#process",
   },
@@ -44,9 +37,7 @@ const steps: Step[] = [
     num: 3,
     title: "Investigation",
     desc: "Our team reviews available evidence and examines the circumstances of your case.",
-    image: img(
-      "Professional%20investigation%20documents%2C%20digital%20records%20and%20a%20security%20shield%20icon%20on%20a%20desk%2C%20financial%20fraud%20investigation%20concept%2C%20premium%20corporate%20photography%2C%20blue%20tones",
-    ),
+    image: "/images/about/mission-building.jpg",
     button: "Track Progress",
     href: "/login",
   },
@@ -54,9 +45,7 @@ const steps: Step[] = [
     num: 4,
     title: "Recovery Action",
     desc: "We explain available recovery options and pursue agreed next steps where appropriate.",
-    image: img(
-      "Professional%20business%20handshake%20between%20two%20people%20in%20business%20suits%2C%20representing%20cooperation%20and%20agreement%2C%20modern%20office%20background%2C%20premium%20corporate%20photography",
-    ),
+    image: "/images/how-it-works/cta-globe.jpg",
     button: "Stay Informed",
     href: "/login",
   },

@@ -7,8 +7,7 @@ import { motion, useInView, useReducedMotion } from "framer-motion";
 import { ArrowRight, Award, Globe2, Star, Users } from "lucide-react";
 import Reveal from "../Reveal";
 
-const globeImg =
-  "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=Professional%20photograph%20of%20a%20businessman%20in%20a%20dark%20suit%20holding%20a%20realistic%20globe%20with%20both%20hands%20against%20a%20deep%20navy%20studio%20background%2C%20dramatic%20rim%20lighting%2C%20international%20finance%20and%20recovery%20concept%2C%20realistic%20photography&image_size=portrait_4_3";
+const globeImg = "/images/about/journey.jpg";
 
 /**
  * PLACEHOLDER FIGURES.

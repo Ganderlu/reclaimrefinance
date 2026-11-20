@@ -5,8 +5,7 @@ import Link from "next/link";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { ArrowRight, ShieldCheck, Lock } from "lucide-react";
 
-const heroImg =
-  "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=Professional%20corporate%20photograph%20of%20a%20confident%20Caucasian%20businesswoman%20aged%2035%20wearing%20glasses%2C%20sitting%20in%20a%20modern%20corporate%20office%20working%20on%20a%20laptop%2C%20reassuring%20friendly%20smile%2C%20soft%20natural%20daylight%2C%20premium%20financial%20services%20portrait%2C%20sharp%20focus&image_size=portrait_4_3";
+const heroImg = "/images/how-it-works/hero.jpg";
 
 const decorativeLines = [
   "M0,90 C150,150 260,40 440,100",

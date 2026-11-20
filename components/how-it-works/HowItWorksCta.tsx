@@ -7,8 +7,7 @@ import { ArrowRight, ShieldCheck } from "lucide-react";
 import Reveal from "../Reveal";
 import Logo from "../Logo";
 
-const globeImg =
-  "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=Glowing%20digital%20globe%20with%20emerald%20and%20blue%20network%20connection%20lines%20representing%20global%20financial%20network%2C%20dark%20navy%20background%2C%20premium%20fintech%203D%20render%2C%20high%20detail&image_size=landscape_4_3";
+const globeImg = "/images/how-it-works/cta-globe.jpg";
 
 export default function HowItWorksCta() {
   const reduce = useReducedMotion();

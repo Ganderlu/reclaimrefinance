@@ -87,7 +87,7 @@ function ClaimContent() {
               <div className="overflow-hidden rounded-3xl border border-slate-100 shadow-[var(--shadow-card)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=Close-up%20of%20a%20blue%20approval%20stamp%20on%20a%20document%20on%20a%20dark%20keyboard%2C%20premium%20financial%20approval%20concept%2C%20realistic%20photography&image_size=landscape_4_3"
+                  src="/images/how-it-works/cta-globe.jpg"
                   alt="Claim approved concept"
                   className="h-full w-full object-cover"
                 />
