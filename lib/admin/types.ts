@@ -134,7 +134,7 @@ export interface PlatformSettings {
 
 export const defaultPlatformSettings: PlatformSettings = {
   companyName: "ReclaimRefinance",
-  supportEmail: "support@reclaimrefinance.com",
+  supportEmail: "reclaimrefinance@hotmail.com",
   contactPhone: "+1 (555) 000-0000",
   defaultCurrency: "USD",
   notifyOnNewClaim: true,

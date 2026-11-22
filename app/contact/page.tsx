@@ -1,6 +1,6 @@
 import SimplePage from "@/components/SimplePage";
 import ContactForm from "@/components/ContactForm";
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, MapPin } from "lucide-react";
 
 export const metadata = {
   title: "Contact | ReclaimRefinance",
@@ -14,16 +14,11 @@ export default function ContactPage() {
       title="We're Here to Help"
       description="Have questions about your case or our services? Reach out to our team — we aim to respond promptly."
     >
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2">
         <div className="rounded-2xl border border-slate-100 bg-sky-soft p-5 text-center">
           <Mail className="mx-auto text-emerald" size={24} />
           <p className="mt-3 text-sm font-semibold text-navy">Email</p>
-          <p className="mt-1 text-sm text-slate-text">support@reclaimrefinance.example</p>
-        </div>
-        <div className="rounded-2xl border border-slate-100 bg-sky-soft p-5 text-center">
-          <Phone className="mx-auto text-emerald" size={24} />
-          <p className="mt-3 text-sm font-semibold text-navy">Phone</p>
-          <p className="mt-1 text-sm text-slate-text">+1 (555) 000-0000</p>
+          <p className="mt-1 text-sm text-slate-text">reclaimrefinance@hotmail.com</p>
         </div>
         <div className="rounded-2xl border border-slate-100 bg-sky-soft p-5 text-center">
           <MapPin className="mx-auto text-emerald" size={24} />

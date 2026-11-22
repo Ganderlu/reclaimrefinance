@@ -41,7 +41,7 @@ const infoItems = [
 ];
 
 const helpItems = [
-  { icon: Mail, label: "Email Us", value: "support@reclaimrefinance.com" },
+  { icon: Mail, label: "Email Us", value: "reclaimrefinance@hotmail.com" },
   { icon: MessageCircle, label: "Live Chat", value: "Chat with our team" },
   { icon: Clock, label: "Business Hours", value: "Mon - Fri, 8am - 8pm (UTC)" },
 ];

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, Menu, X, ArrowRight } from "lucide-react";
+import { ChevronDown, Menu, X, ArrowRight, Mail } from "lucide-react";
 import Logo from "./Logo";
 
 const services = [
@@ -55,7 +55,13 @@ const navLinks: NavLink[] = [
   { label: "Contact", href: "/contact" },
 ];
 
-export default function Navbar({ darkHero = false }: { darkHero?: boolean }) {
+export default function Navbar({
+  darkHero = false,
+  showTopBar = false,
+}: {
+  darkHero?: boolean;
+  showTopBar?: boolean;
+}) {
   const [scrolled, setScrolled] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -99,6 +105,19 @@ export default function Navbar({ darkHero = false }: { darkHero?: boolean }) {
             : "bg-transparent"
         }`}
       >
+        {showTopBar && (
+          <div className="border-b border-white/10 bg-navy-dark">
+            <div className="mx-auto flex h-9 max-w-7xl items-center justify-center gap-2 px-4 text-[12.5px] sm:px-6 lg:px-8">
+              <Mail size={14} aria-hidden="true" className="shrink-0 text-emerald-light" />
+              <a
+                href="mailto:reclaimrefinance@hotmail.com"
+                className="font-medium tracking-wide text-white/85 transition-colors hover:text-white"
+              >
+                reclaimrefinance@hotmail.com
+              </a>
+            </div>
+          </div>
+        )}
         <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-[88px] items-center justify-between">
             <Logo light={onDark} />

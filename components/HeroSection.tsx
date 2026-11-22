@@ -41,7 +41,7 @@ export default function HeroSection() {
   return (
     <section
       id="home"
-      className="relative overflow-hidden bg-gradient-to-br from-navy via-navy-soft to-navy-dark pt-32 pb-20 text-white sm:pt-36 lg:pt-40 lg:pb-24"
+      className="relative overflow-hidden bg-gradient-to-br from-navy via-navy-soft to-navy-dark pt-[164px] pb-20 text-white sm:pt-[180px] lg:pt-[196px] lg:pb-24"
     >
       {/* decorative grid + glow */}
       <div className="pointer-events-none absolute inset-0">
