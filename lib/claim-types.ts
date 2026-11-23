@@ -1,4 +1,4 @@
-export type ContactMethod = "email" | "phone" | "whatsapp";
+export type ContactMethod = "email";
 
 export interface PersonalInformation {
   firstName: string;

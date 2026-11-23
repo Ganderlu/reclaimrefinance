@@ -3,7 +3,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import {
   Check,
   ArrowRight,
@@ -69,6 +68,8 @@ export default function ClaimWizard({
     referenceNumber: string;
     createdAt: string;
     category: string;
+    email: string;
+    emailSent: boolean;
   } | null>(null);
 
   const completedSteps = useMemo(() => {
@@ -185,6 +186,8 @@ export default function ClaimWizard({
           referenceNumber: res.data.referenceNumber,
           createdAt: res.data.createdAt,
           category: res.data.category,
+          email: data.personal.email,
+          emailSent: res.data.emailSent,
         });
         try {
           localStorage.removeItem("claimDraft");
@@ -456,7 +459,13 @@ function SuccessScreen({
   result,
   router,
 }: {
-  result: { referenceNumber: string; createdAt: string; category: string };
+  result: {
+    referenceNumber: string;
+    createdAt: string;
+    category: string;
+    email: string;
+    emailSent: boolean;
+  };
   router: ReturnType<typeof useRouter>;
 }) {
   const reduce = useReducedMotion();
@@ -535,10 +544,24 @@ function SuccessScreen({
             </button>
           </div>
 
-          <p className="mt-6 text-xs text-slate-text">
-            A confirmation email has been sent to your email address with your
-            claim reference.
-          </p>
+          {result.emailSent ? (
+            <p className="mt-6 text-xs text-slate-text">
+              A confirmation email with your claim reference has been sent to{" "}
+              <span className="font-semibold text-navy">{result.email}</span>.
+            </p>
+          ) : (
+            <p className="mt-6 text-xs leading-relaxed text-slate-text">
+              Your claim is saved, but we could not send the confirmation email
+              automatically. Please contact{" "}
+              <a
+                href="mailto:reclaimrefinance@hotmail.com"
+                className="font-semibold text-emerald underline"
+              >
+                reclaimrefinance@hotmail.com
+              </a>{" "}
+              and include your claim reference.
+            </p>
+          )}
         </motion.div>
       </div>
     </section>
