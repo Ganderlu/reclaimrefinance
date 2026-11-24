@@ -28,6 +28,21 @@ const hasIndividualVars = Boolean(
   individualVars.project_id && individualVars.private_key && individualVars.client_email,
 );
 
+/**
+ * A PEM private key stored in a single-line environment variable usually
+ * contains the two characters "\" + "n" instead of real newlines. OpenSSL
+ * cannot decode that form, so convert them back to real newlines. The trim
+ * removes any surrounding whitespace or stray quotes added by host dashboards.
+ */
+function normalizePrivateKey(account: Record<string, unknown>): void {
+  const key = account.private_key;
+  if (typeof key !== "string") return;
+  account.private_key = key
+    .replace(/\\n/g, "\n")
+    .replace(/^["']|["']$/g, "")
+    .trim();
+}
+
 try {
   if (hasIndividualVars) {
     // Build the service account object from individual environment variables.
@@ -35,13 +50,16 @@ try {
     for (const [key, value] of Object.entries(individualVars)) {
       if (value !== undefined) account[key] = value;
     }
+    normalizePrivateKey(account);
     serviceAccount = account;
   } else if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
     // Fallback for the legacy single-line JSON variable.
-    serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON) as Record<
+    const parsed = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON) as Record<
       string,
       unknown
     >;
+    normalizePrivateKey(parsed);
+    serviceAccount = parsed;
   } else {
     serviceAccount = undefined;
   }
