@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import {
@@ -88,16 +88,16 @@ export default function ClaimWizard({
     }
   }, [data]);
 
-  const updatePersonal = (patch: Partial<ClaimData["personal"]>) =>
-    setData((d) => ({ ...d, personal: { ...d.personal, ...patch } }));
-  const updateScam = (patch: Partial<ClaimData["scam"]>) =>
-    setData((d) => ({ ...d, scam: { ...d.scam, ...patch } }));
-  const updateFinancial = (patch: Partial<ClaimData["financial"]>) =>
-    setData((d) => ({ ...d, financial: { ...d.financial, ...patch } }));
-  const updateDocuments = (files: ClaimData["documents"]) =>
-    setData((d) => ({ ...d, documents: files }));
-  const updateConsent = (patch: Partial<ClaimData["consent"]>) =>
-    setData((d) => ({ ...d, consent: { ...d.consent, ...patch } }));
+  const updatePersonal = useCallback((patch: Partial<ClaimData["personal"]>) =>
+    setData((d) => ({ ...d, personal: { ...d.personal, ...patch } })), []);
+  const updateScam = useCallback((patch: Partial<ClaimData["scam"]>) =>
+    setData((d) => ({ ...d, scam: { ...d.scam, ...patch } })), []);
+  const updateFinancial = useCallback((patch: Partial<ClaimData["financial"]>) =>
+    setData((d) => ({ ...d, financial: { ...d.financial, ...patch } })), []);
+  const updateDocuments = useCallback((files: ClaimData["documents"]) =>
+    setData((d) => ({ ...d, documents: files })), []);
+  const updateConsent = useCallback((patch: Partial<ClaimData["consent"]>) =>
+    setData((d) => ({ ...d, consent: { ...d.consent, ...patch } })), []);
 
   const validateStep = (s: number): Record<string, string> => {
     const e: Record<string, string> = {};
@@ -121,8 +121,9 @@ export default function ClaimWizard({
         e.description = "Please provide at least 20 characters";
     } else if (s === 3) {
       const f = data.financial;
-      if (!f.amountLost.trim()) e.amountLost = "Amount is required";
-      else if (isNaN(Number(f.amountLost)) || Number(f.amountLost) <= 0)
+      const normalizedAmount = f.amountLost.replace(/[, ]/g, "");
+      if (!normalizedAmount) e.amountLost = "Amount is required";
+      else if (isNaN(Number(normalizedAmount)) || Number(normalizedAmount) <= 0)
         e.amountLost = "Enter a valid amount";
       if (!f.currency) e.currency = "Currency is required";
       if (!f.paymentMethod) e.paymentMethod = "Payment method is required";
@@ -167,6 +168,10 @@ export default function ClaimWizard({
     try {
       const payload: ClaimData = {
         ...data,
+        financial: {
+          ...data.financial,
+          amountLost: data.financial.amountLost.replace(/[, ]/g, ""),
+        },
         documents: data.documents.map((d) => ({
           name: d.name,
           size: d.size,
@@ -200,8 +205,12 @@ export default function ClaimWizard({
       } else {
         setSubmitError("Failed to submit claim. Please try again.");
       }
-    } catch {
-      setSubmitError("An unexpected error occurred. Please try again.");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      console.error("Claim submission error:", err);
+      setSubmitError(
+        `An unexpected error occurred. Please try again.${message ? ` (${message})` : ""}`,
+      );
     } finally {
       setSubmitting(false);
     }

@@ -36,22 +36,29 @@ export type SubmitResult =
     }
   | { ok: false; error: string };
 
+function normalizeAmount(value: string): string {
+  return String(value ?? "").replace(/[, ]/g, "").trim();
+}
+
 function serverValidate(data: ClaimData): string | null {
   if (!data.personal.firstName?.trim()) return "First name is required";
   if (!data.personal.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.personal.email))
     return "Valid email is required";
   if (!data.scam.category) return "Scam category is required";
-  if (!data.financial.amountLost) return "Amount lost is required";
+  const amount = normalizeAmount(data.financial.amountLost);
+  if (!amount || isNaN(Number(amount)) || Number(amount) <= 0)
+    return "Amount lost is required";
   if (!data.consent.accurate || !data.consent.terms || !data.consent.authorize)
     return "All consent checkboxes must be accepted";
   return null;
 }
 
 export async function submitClaim(data: ClaimData): Promise<SubmitResult> {
+  const normalizedAmount = normalizeAmount(data.financial.amountLost);
   // Idempotency: prevent duplicate rapid submissions via a simple in-memory
   // key; production should use a durable store (e.g. Redis / Firestore lock).
   const idempotencyKey =
-    data.personal.email + "|" + data.scam.category + "|" + data.financial.amountLost;
+    data.personal.email + "|" + data.scam.category + "|" + normalizedAmount;
 
   const validationError = serverValidate(data);
   if (validationError) return { ok: false, error: validationError };
@@ -131,7 +138,10 @@ export async function submitClaim(data: ClaimData): Promise<SubmitResult> {
         preferredContact: "email",
       },
       scamDetails: data.scam,
-      financialDetails: data.financial,
+      financialDetails: {
+        ...data.financial,
+        amountLost: normalizedAmount,
+      },
       supportingDocuments: data.documents.map((d) => ({
         name: d.name,
         size: d.size,
